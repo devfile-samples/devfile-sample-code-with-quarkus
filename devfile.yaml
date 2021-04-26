@@ -3,8 +3,6 @@ metadata:
   name: java-quarkus
   version: 1.1.0
   attributes:
-    # Build the image with:
-    # docker build -f src/main/docker/Dockerfile.jvm.staged -t quarkus/code-with-quarkus-jvm .
     alpha.build-context: .
     alpha.build-dockerfile: src/main/docker/Dockerfile.jvm.staged
   website: https://quarkus.io

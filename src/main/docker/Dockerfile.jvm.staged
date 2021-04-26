@@ -13,13 +13,9 @@ RUN ./mvnw package
 ####
 # This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
 #
-# Before building the container image run:
+# Build the image with:
 #
-# ./mvnw package
-#
-# Then, build the image with:
-#
-# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/code-with-quarkus-jvm .
+# docker build -f src/main/docker/Dockerfile.jvm.staged -t quarkus/code-with-quarkus-jvm .
 #
 # Then run the container using:
 #
