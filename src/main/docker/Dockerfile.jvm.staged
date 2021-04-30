@@ -1,16 +1,3 @@
-FROM registry.access.redhat.com/ubi8/openjdk-11:latest
-
-WORKDIR /tmp
-RUN mkdir -p .mvn/wrapper
-# Build dependency offline to streamline build
-COPY mvnw* .
-COPY .mvn/wrapper .mvn/wrapper
-COPY pom.xml .
-RUN ./mvnw dependency:go-offline
-
-COPY src src
-RUN ./mvnw package
-
 ####
 # This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
 #
@@ -30,6 +17,20 @@ RUN ./mvnw package
 # docker run -i --rm -p 8081:8081 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/code-with-quarkus-jvm
 #
 ###
+FROM registry.access.redhat.com/ubi8/openjdk-11:latest
+
+USER root
+WORKDIR /build
+RUN mkdir -p .mvn/wrapper
+# Build dependency offline to streamline build
+COPY mvnw* .
+COPY .mvn/wrapper .mvn/wrapper
+COPY pom.xml .
+RUN ./mvnw dependency:go-offline
+
+COPY src src
+RUN ./mvnw package
+
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3 
 
 ARG JAVA_PACKAGE=java-11-openjdk-headless
@@ -52,10 +53,10 @@ RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=8081 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 # We make four distinct layers so if there are application changes the library layers can be re-used
-COPY --from=0 --chown=1001 /tmp/target/quarkus-app/lib/ /deployments/lib/
-COPY --from=0 --chown=1001 /tmp/target/quarkus-app/*.jar /deployments/
-COPY --from=0 --chown=1001 /tmp/target/quarkus-app/app/ /deployments/app/
-COPY --from=0 --chown=1001 /tmp/target/quarkus-app/quarkus/ /deployments/quarkus/
+COPY --from=0 --chown=1001 /build/target/quarkus-app/lib/ /deployments/lib/
+COPY --from=0 --chown=1001 /build/target/quarkus-app/*.jar /deployments/
+COPY --from=0 --chown=1001 /build/target/quarkus-app/app/ /deployments/app/
+COPY --from=0 --chown=1001 /build/target/quarkus-app/quarkus/ /deployments/quarkus/
 
 EXPOSE 8081
 USER 1001
