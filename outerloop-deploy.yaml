@@ -1,0 +1,25 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: my-java-quarkus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-quarkus-app
+  template:
+    metadata:
+      labels:
+        app: java-quarkus-app
+    spec:
+      containers:
+        - name: my-java-quarkus
+          image: java-quarkus-image:latest
+          ports:
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+          resources:
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
