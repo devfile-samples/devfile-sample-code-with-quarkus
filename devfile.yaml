@@ -32,7 +32,7 @@ components:
       uri: outerloop-deploy.yaml
   - name: tools
     container:
-      image: quay.io/eclipse/che-quarkus:nightly
+      image: quay.io/eclipse/che-quarkus:7.36.0
       memoryLimit: 1512Mi
       mountSources: true
       volumeMounts:
