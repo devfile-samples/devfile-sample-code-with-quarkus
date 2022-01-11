@@ -12,13 +12,9 @@ metadata:
   language: "java"
   attributes:
     alpha.dockerimage-port: 8081
-starterProjects:
-  - name: community
-    zip:
-      location: https://code.quarkus.io/d?e=io.quarkus%3Aquarkus-resteasy&e=io.quarkus%3Aquarkus-micrometer&e=io.quarkus%3Aquarkus-smallrye-health&e=io.quarkus%3Aquarkus-openshift&cn=devfile
-  - name: redhat-product
-    zip:
-      location: https://code.quarkus.redhat.com/d?e=io.quarkus%3Aquarkus-resteasy&e=io.quarkus%3Aquarkus-smallrye-health&e=io.quarkus%3Aquarkus-openshift
+parent:
+  id: java-quarkus
+  registryUrl: "https://registry.devfile.io"
 components:
   - name: outerloop-build
     image:
@@ -30,44 +26,7 @@ components:
   - name: outerloop-deploy
     kubernetes:
       uri: outerloop-deploy.yaml
-  - name: tools
-    container:
-      image: quay.io/eclipse/che-quarkus:7.36.0
-      memoryLimit: 1512Mi
-      mountSources: true
-      volumeMounts:
-        - name: m2
-          path: /home/user/.m2
-      endpoints:
-        - name: '8080-http'
-          targetPort: 8080
-  - name: m2
-    volume:
-      size: 3Gi
 commands:
-  - id: init-compile
-    exec:
-      component: tools
-      commandLine: "mvn -Dmaven.repo.local=/home/user/.m2/repository compile"
-      workingDir: $PROJECTS_ROOT
-  - id: dev-run
-    exec:
-      component: tools
-      commandLine: "mvn -Dmaven.repo.local=/home/user/.m2/repository quarkus:dev -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-      hotReloadCapable: true
-      group:
-        kind: run
-        isDefault: true
-      workingDir: $PROJECTS_ROOT
-  - id: dev-debug
-    exec:
-      component: tools
-      commandLine: "mvn -Dmaven.repo.local=/home/user/.m2/repository quarkus:dev -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Ddebug=${DEBUG_PORT}"
-      hotReloadCapable: true
-      group:
-        kind: debug
-        isDefault: true
-      workingDir: $PROJECTS_ROOT
   - id: build-image
     apply:
       component: outerloop-build
@@ -82,6 +41,3 @@ commands:
       group:
         kind: deploy
         isDefault: true
-events:
-  postStart:
-    - init-compile
