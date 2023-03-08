@@ -18,7 +18,7 @@ metadata:
 spec:
   params:
   - name: dockerfile
-    value: src/main/docker/Dockerfile.jvm.staged
+    value: Dockerfile
   - name: git-url
     value: '{{repo_url}}'
   - name: output-image
