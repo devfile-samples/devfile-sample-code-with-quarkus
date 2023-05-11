@@ -23,7 +23,7 @@ spec:
   - name: git-url
     value: '{{repo_url}}'
   - name: image-expires-after
-    value: 4d
+    value: 5d
   - name: output-image
     value: quay.io/redhat-user-workloads/emoraes-tenant/devfile-sample-code-with-quarkus/devfile-sample-code-with-quarkus-8cxt:on-pr-{{revision}}
   - name: path-context
