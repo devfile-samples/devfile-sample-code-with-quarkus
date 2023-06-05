@@ -97,7 +97,7 @@ spec:
       type: string
     - default: ""
       description: Snyk Token Secret Name
-      name: snyk-secret
+      name: snyk-secre
       type: string
     - default: ""
       description: Image tag expiration time, time values could be something like
