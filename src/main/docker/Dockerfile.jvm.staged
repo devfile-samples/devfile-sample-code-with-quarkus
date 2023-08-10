@@ -17,7 +17,7 @@
 # docker run -i --rm -p 8081:8081 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/code-with-quarkus-jvm
 #
 ###
-FROM registry.access.redhat.com/ubi8/openjdk-17:1.15-1.1682053058
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.16
 
 USER root
 WORKDIR /build
