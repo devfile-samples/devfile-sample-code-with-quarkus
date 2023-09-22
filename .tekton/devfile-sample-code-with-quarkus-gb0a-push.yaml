@@ -198,6 +198,17 @@ spec:
       workspaces:
       - name: source
         workspace: workspace
+    - name: redhat-dependency-analytics
+        taskRef:
+          name: redhat-dependency-analytics
+        workspaces:
+          - name: source
+            workspace: source
+        params:
+          - name: manifest-file-path
+            value: pom.xml
+        runAfter:
+          - clone-repository
     - name: build-container
       params:
       - name: IMAGE
