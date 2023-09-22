@@ -5,6 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+// changing so that CI/CD pipeline triggers.
 @Path("/hello-resteasy")
 public class GreetingResource {
 
