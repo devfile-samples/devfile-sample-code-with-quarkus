@@ -198,17 +198,60 @@ spec:
       workspaces:
       - name: source
         workspace: workspace
-    - name: redhat-dependency-analytics
-        taskRef:
-          name: redhat-dependency-analytics
+    - name: trusted-content
+      taskSpec:
+        results:
+          - name: CVE_SCAN_RESULT
+            description: trusted content scan result
+          - name: TEST_OUTPUT
+            description: trusted content output
         workspaces:
           - name: source
-            workspace: source
-        params:
-          - name: manifest-file-path
-            value: pom.xml
-        runAfter:
-          - clone-repository
+        steps:
+          - name: run-redhat-crda-scan-step
+            image: quay.io/lrangine/crda-maven:11.0
+            workingDir: "$(workspaces.source.path)"
+            env:
+              - name: AUTH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: crda-scan-secrets
+                    key: AUTH_TOKEN
+              - name: CONSENT_TELEMETRY
+                value: "false"
+              - name: CRDA_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: crda-scan-secrets
+                    key: CRDA_KEY
+              - name: HOST
+                valueFrom:
+                  secretKeyRef:
+                    name: crda-scan-secrets
+                    key: HOST
+            script: |
+              #!/usr/bin/env bash
+              echo 'ready to scan'
+              /crda.sh pom.xml crda_scan_output.json
+              echo 'CRDA Scan is completed'
+              echo 'Printing scan results'
+              more crda_scan_output.json
+              echo 'Formatting the Task Results'
+              jq -rce \
+              '{vulnerabilities:{
+              critical: (.report."critical_vulnerabilities"),
+              high: (.report."high_vulnerabilities"),
+              medium: (.report."medium_vulnerabilities"),
+              low: (.report."low_vulnerabilities")
+              }}' crda_scan_output.json | tee $(results.CVE_SCAN_RESULT.path)
+              NOTE="Task $(context.task.name) completed: Refer to Tekton task result CVE_SCAN_RESULT for vulnerabilities scanned by RHTC."
+              TEST_OUTPUT="SUCCESS $NOTE"
+              echo "${TEST_OUTPUT}" | tee $(results.TEST_OUTPUT.path)
+      runAfter:
+        - clone-repository
+      workspaces:
+        - name: source
+          workspace: workspace
     - name: build-container
       params:
       - name: IMAGE
