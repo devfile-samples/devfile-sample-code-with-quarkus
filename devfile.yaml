@@ -1,7 +1,7 @@
 schemaVersion: 2.2.0
 metadata:
   name: java-quarkus
-  version: 1.2.1
+  version: 1.2.2
   provider: Red Hat
   supportUrl: https://github.com/devfile-samples/devfile-support#support-information
   icon: https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg
