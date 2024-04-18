@@ -18,6 +18,7 @@ metadata:
 parent:
   id: java-quarkus
   registryUrl: 'https://registry.devfile.io'
+  version: 1.4.0
 components:
   - name: image-build
     image:
